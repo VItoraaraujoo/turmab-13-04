@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Termo - Primeira Palavra</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      margin-top: 50px;
+    }
+    .letras {
+      display: flex;
+      justify-content: center;
+      margin-top: 10px;
+    }
+    .letra {
+      width: 40px;
+      height: 40px;
+      margin: 2px;
+      font-size: 24px;
+      font-weight: bold;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border: 2px solid #ccc;
+      text-transform: uppercase;
+    }
+    .certa { background-color: #6aaa64; color: white; }
+    .quase { background-color: #c9b458; color: white; }
+    .errada { background-color: #787c7e; color: white; }
+    input {
+      padding: 10px;
+      font-size: 16px;
+      margin-top: 20px;
+    }
+    button {
+      padding: 10px;
+      font-size: 16px;
+      margin-left: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Termo - Adivinhe a Primeira Palavra</h1>
+  <input type="text" id="palpite" maxlength="10" placeholder="Digite uma palavra">
+  <button onclick="verificar()">Tentar</button>
+  <div id="tentativas"></div>
+
+  <script>
+    const termo = "lua cheia brilhante";
+    const primeiraPalavra = termo.split(" ")[0].toLowerCase();
+    const tentativasDiv = document.getElementById("tentativas");
+
+    function verificar() {
+      const input = document.getElementById("palpite");
+      const palpite = input.value.trim().toLowerCase();
+
+      if (palpite.length !== primeiraPalavra.length) {
+        alert("A palavra deve ter " + primeiraPalavra.length + " letras!");
+        return;
+      }
+
+      const linha = document.createElement("div");
+      linha.className = "letras";
+
+      const letrasUsadas = primeiraPalavra.split('');
+      const resultado = [];
+
+      
+      for (let i = 0; i < palpite.length; i++) {
+        const letraBox = document.createElement("div");
+        letraBox.className = "letra";
+
+        if (palpite[i] === primeiraPalavra[i]) {
+          letraBox.classList.add("certa");
+          resultado.push(null); 
+          letrasUsadas[i] = null;
+        } else {
+          resultado.push(palpite[i]);
+        }
+
+        letraBox.textContent = palpite[i];
+        linha.appendChild(letraBox);
+      }
+
+      
+      for (let i = 0; i < palpite.length; i++) {
+        const letraBox = linha.children[i];
+        if (letraBox.classList.contains("certa")) continue;
+
+        if (letrasUsadas.includes(palpite[i])) {
+          letraBox.classList.add("quase");
+          letrasUsadas[letrasUsadas.indexOf(palpite[i])] = null;
+        } else {
+          letraBox.classList.add("errada");
+        }
+      }
+
+      tentativasDiv.appendChild(linha);
+      input.value = "";
+
+      if (palpite === primeiraPalavra) {
+        alert("Parabéns! Você acertou a primeira palavra!");
+      }
+    }
+  </script>
+</body>
+</html>
